@@ -1,4 +1,4 @@
-def
+import argparse
 
 
 def print_file_content(file):
@@ -35,3 +35,12 @@ def read_csv(input_file):
             lst.append(row)
 
     return lst
+
+
+# Used for when you run the module seperately.
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Used to read and write to text files locally'
+    )
+    parser.add_argument('file', help='')
+    parser.add_argument('destination', help='')
