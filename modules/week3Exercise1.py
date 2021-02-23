@@ -1,11 +1,12 @@
 import random
+import csv
 
 
 def generate_students(n):
     course_names = ("English", "Danish", "Math", "Physics", "Sports")
     course_classrooms = ("11", "12", "13", "21", "22", "23")
     course_teachers = ("John", "Magnus", "Borat", "Sally")
-    course_etcs = ("5", "10")
+    course_ects = ("5", "10")
     course_grades = (-3, 0, 2, 4, 7, 10, 12)
 
     names = ("Allyn", "Aly", "Penn", "Marley", "Kami", "Vix")
@@ -23,7 +24,7 @@ def generate_students(n):
                 course,
                 random.choice(course_classrooms),
                 random.choice(course_teachers),
-                random.choice(course_etcs),
+                random.choice(course_ects),
                 random.choice(course_grades)
             ))
         data_sheet = DataSheet(courses)
@@ -31,8 +32,30 @@ def generate_students(n):
         students.append(
             Student(name, gender, data_sheet, "https://url.com/" + name + ".png"))
 
-    for student in students:
-        student.print_student()
+    with open('files/students.csv', mode="w") as students_file:
+        student_writer = csv.writer(
+            students_file, delimiter=',', quotechat='"', quoting=csv.QUOTE_MINIMAL)
+        student_writer.writerow([
+                'stud_name', 
+                'course_name', 
+                'teacher', 
+                'ects', 
+                'classroom', 
+                'grade', 
+                'img_url'
+                ])
+        for student in students:
+            student.print_student()
+            for stud_course in student.data_sheet.courses:
+                student_writer.writerow([
+                    student.name, 
+                    stud_course.name, 
+                    stud_course.teacher,
+                    stud_course.ects, 
+                    stud_course.classroom, 
+                    stud_course.grade, 
+                    student.image_url
+                    ])
 
 
 class Student():
@@ -59,11 +82,11 @@ class DataSheet():
 
 
 class Course():
-    def __init__(self, name, classroom, teacher, etcs, grade="N/A"):
+    def __init__(self, name, classroom, teacher, ects, grade="N/A"):
         self.name = name
         self.classroom = classroom
         self.teacher = teacher
-        self.etcs = etcs
+        self.ects = ects
         self.grade = grade
 
     def set_grade(self, grade):
